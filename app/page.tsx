@@ -31,7 +31,7 @@ export default function Home() {
 }
 */
 
-"use client";
+/*"use client";
 
 import { useEffect, useState } from "react";
 import CandidateProfile from "@/components/CandidateProfile";
@@ -73,5 +73,44 @@ export default function Home() {
         <p className="text-sm">&copy; 2025 Hiring Platform. All rights reserved.</p>
       </footer>
     </div>
+  );
+}*/
+
+
+"use client";
+
+import { useState, useEffect } from "react";
+import JobForm from "@/components/JobForm";
+import JobListings from "@/components/JobListings";
+import { Job } from "@/types/job";
+
+export default function Home() {
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  // Fetch jobs from the API
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch("/api/jobs");
+      if (!res.ok) throw new Error("Failed to fetch jobs");
+
+      const data: Job[] = await res.json();
+      setJobs(data || []);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setJobs([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  return (
+    <main className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Job Board</h1>
+
+      <JobForm onJobPosted={fetchJobs} />
+      <JobListings jobs={jobs} />
+    </main>
   );
 }

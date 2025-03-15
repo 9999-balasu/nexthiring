@@ -1,9 +1,35 @@
 
+import React from "react";
+import { Job } from "@/types/job";
+
+interface JobListingsProps {
+  jobs: Job[];
+}
+
+const JobListings: React.FC<JobListingsProps> = ({ jobs }) => {
+  return (
+    <div className="space-y-4">
+      {jobs.length === 0 ? (
+        <p>No jobs available.</p>
+      ) : (
+        jobs.map((job) => (
+          <div key={job._id} className="border p-4 rounded-lg">
+            <h2 className="text-lg font-bold">{job.title}</h2>
+            <p>{job.description}</p>
+            <p className="text-sm text-gray-500">{job.company}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+export default JobListings;
 
 
 
 
-"use client"; // Required for client-side fetching
+/*"use client"; // Required for client-side fetching
 
 import { useEffect, useState } from "react";
 
@@ -33,4 +59,6 @@ export default function JobListings() {
       )}
     </div>
   );
-}
+}*/
+
+
