@@ -54,6 +54,7 @@ export default async function JobListings() {
     </div>
   );
 }*/
+"use client";
 import { Job } from "@/types/job";
 import { useEffect, useState } from "react";
 
