@@ -17,6 +17,9 @@ import JobListings from "@/components/JobListings";
 import ResumeUploadForm from "@/components/ResumeUploadForm";
 import ResumeList from "@/components/ResumeList";
 import { Job } from "@/types/job";
+import CandidateApplications from "@/components/CandidateApplications";
+import CandidateJobSearch from "@/components/CandidateJobSearch";
+import CandidateProfileForm from "@/components/CandidateProfileForm";
 
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -48,7 +51,9 @@ export default function Home() {
         <h2 className="text-xl font-semibold mb-4">Resume Board</h2>
         <ResumeUploadForm onUpload={() => setRefreshResumes((prev) => !prev)} />
         <ResumeList key={refreshResumes ? "refresh-true" : "refresh-false"} />
-       
+       <CandidateApplications/>
+       <CandidateJobSearch/>
+       <CandidateProfileForm/>
       </section>
     </main>
   );
