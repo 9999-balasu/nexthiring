@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/*import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "@/models/User";
@@ -33,4 +33,29 @@ export async function POST(req: Request) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
+}*/
+
+
+
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "@/models/User";
+
+import { connectToDB } from "@/lib/mongodb";
+
+export async function POST(req: Request) {
+  await connectToDB();
+  const { email, password } = await req.json();
+
+  const user = await User.findOne({ email });
+  if (!user) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: "1d" });
+  const response = NextResponse.json({ message: "Login successful" });
+  response.cookies.set("token", token, { httpOnly: true, maxAge: 86400 });
+  return response;
 }
