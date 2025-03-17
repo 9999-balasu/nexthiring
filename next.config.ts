@@ -8,10 +8,9 @@ const nextConfig: NextConfig = {
 
 
 
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  reactStrictMode: true,
   async headers() {
     return [
       {
@@ -19,7 +18,7 @@ const nextConfig = {
         headers: [
           {
             key: "Permissions-Policy",
-            value: "camera=(self), microphone=(self)",
+            value: "camera=(), microphone=()",
           },
         ],
       },
@@ -27,7 +26,8 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
+
 
 
 
