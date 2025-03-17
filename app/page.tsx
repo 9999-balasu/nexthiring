@@ -21,10 +21,12 @@ import CandidateApplications from "@/components/CandidateApplications";
 import CandidateJobSearch from "@/components/CandidateJobSearch";
 import CandidateProfileForm from "@/components/CandidateProfileForm";
 
+
+import VideoInterview from "@/components/VideoInterview";
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [refreshResumes, setRefreshResumes] = useState(false);
-
+  const roomId: string = "job-interview-room";
   const fetchJobs = async () => {
     const res = await fetch("/api/jobs");
     if (!res.ok) return;
@@ -54,6 +56,8 @@ export default function Home() {
        <CandidateApplications/>
        <CandidateJobSearch/>
        <CandidateProfileForm/>
+       <VideoInterview roomId={roomId} />
+       
       </section>
     </main>
   );

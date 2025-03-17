@@ -189,7 +189,7 @@ export default function Dashboard() {
 }
 */
 
-"use client";
+/*"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -269,8 +269,8 @@ export default function Dashboard() {
           Resumes
         </button>
 
-        {/* Add Candidate Applications Button */}
-  <button
+        {/* Add Candidate Applications Button */
+  /*<button
     onClick={() => setActiveTab("applications")}
     className={`px-6 py-2 rounded-lg text-white font-semibold transition ${
       activeTab === "applications" ? "bg-purple-600" : "bg-gray-400 hover:bg-gray-500"
@@ -292,6 +292,128 @@ export default function Dashboard() {
         </div>
       ) : (
         <CandidateApplications />
+      )}
+    </div>
+  );
+}*/
+
+
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import JobForm from "@/components/JobForm";
+import JobListings from "@/components/JobListings";
+import ResumeUploadForm from "@/components/ResumeUploadForm";
+import ResumeList from "@/components/ResumeList";
+import CandidateApplications from "@/components/CandidateApplications";
+import VideoInterview from "@/components/VideoInterview"; // Import Live Video Component
+
+export default function Dashboard() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<"jobs" | "resumes" | "applications" | "video">("jobs");
+  const [jobs, setJobs] = useState([]);
+  const [refreshResumes, setRefreshResumes] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const roomId = "hiring-platform-" + Math.random().toString(36).substr(2, 9); // Unique room ID
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const auth = localStorage.getItem("auth");
+      if (auth === "true") {
+        setIsAuthenticated(true);
+        fetchJobs();
+      } else {
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch("/api/jobs");
+      if (!res.ok) throw new Error("Failed to fetch jobs");
+      const data = await res.json();
+      setJobs(data);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    router.push("/login");
+  };
+
+  if (!isAuthenticated) return <p className="text-center text-lg">Loading...</p>;
+
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Job and Resume Board</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div className="flex justify-center gap-4 mb-6">
+        <button
+          onClick={() => setActiveTab("jobs")}
+          className={`px-6 py-2 rounded-lg text-white font-semibold transition ${
+            activeTab === "jobs" ? "bg-blue-600" : "bg-gray-500 hover:bg-gray-600"
+          }`}
+        >
+          Jobs
+        </button>
+
+        <button
+          onClick={() => setActiveTab("resumes")}
+          className={`px-6 py-2 rounded-lg text-white font-semibold transition ${
+            activeTab === "resumes" ? "bg-green-600" : "bg-gray-500 hover:bg-gray-600"
+          }`}
+        >
+          Resumes
+        </button>
+
+        <button
+          onClick={() => setActiveTab("applications")}
+          className={`px-6 py-2 rounded-lg text-white font-semibold transition ${
+            activeTab === "applications" ? "bg-purple-600" : "bg-gray-500 hover:bg-gray-600"
+          }`}
+        >
+          Candidate Applications
+        </button>
+
+        {/* Add Video Interview Button */}
+        <button
+          onClick={() => setActiveTab("video")}
+          className={`px-6 py-2 rounded-lg text-white font-semibold transition ${
+            activeTab === "video" ? "bg-teal-600" : "bg-gray-500 hover:bg-gray-600"
+          }`}
+        >
+          Live Interview
+        </button>
+      </div>
+
+      {activeTab === "jobs" ? (
+        <div>
+          <JobForm onJobPosted={fetchJobs} />
+          <JobListings jobs={jobs} />
+        </div>
+      ) : activeTab === "resumes" ? (
+        <div>
+          <ResumeUploadForm onUpload={() => setRefreshResumes((prev) => !prev)} />
+          <ResumeList key={refreshResumes ? "refresh-true" : "refresh-false"} />
+        </div>
+      ) : activeTab === "applications" ? (
+        <CandidateApplications />
+      ) : (
+        <VideoInterview roomId={roomId} /> // Live Video Interview
       )}
     </div>
   );
