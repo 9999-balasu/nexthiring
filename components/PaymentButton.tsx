@@ -68,6 +68,12 @@ interface RazorpayInstance {
   open: () => void;
 }
 
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
 export default function PaymentButton() {
   const [loading, setLoading] = useState(false);
 
@@ -105,7 +111,7 @@ export default function PaymentButton() {
         name: "Your Company Name",
         description: "Payment for services",
         order_id: data.id,
-        handler: (response: any) => {
+        handler: (response: RazorpayResponse) => { // ✅ Correct type
           alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
         },
         prefill: {
