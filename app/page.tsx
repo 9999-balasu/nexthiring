@@ -23,6 +23,7 @@ import CandidateProfileForm from "@/components/CandidateProfileForm";
 
 
 import VideoInterview from "@/components/VideoInterview";
+import PaymentButton from "@/components/PaymentButton";
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [refreshResumes, setRefreshResumes] = useState(false);
@@ -57,7 +58,7 @@ export default function Home() {
        <CandidateJobSearch/>
        <CandidateProfileForm/>
        <VideoInterview roomId={roomId} />
-       
+       <PaymentButton/>
       </section>
     </main>
   );
