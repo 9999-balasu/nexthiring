@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 
 import { useRef, useState, useEffect } from "react";
 
@@ -97,6 +97,71 @@ export default function VideoInterview({ roomId }: VideoInterviewProps) {
       )}
 
       <div ref={jitsiContainerRef} className="mt-4 border border-gray-500 rounded-lg shadow-lg h-[500px]"></div>
+    </div>
+  );
+}*/
+
+
+
+"use client";
+import { useEffect, useRef, useState } from "react";
+
+declare global {
+  interface Window {
+    JitsiMeetExternalAPI?: new (
+      domain: string,
+      options: object
+    ) => JitsiMeetInstance;
+  }
+}
+
+interface JitsiMeetInstance {
+  dispose: () => void;
+}
+
+interface VideoInterviewProps {
+  roomId: string;
+}
+
+export default function VideoInterview({ roomId }: VideoInterviewProps) {
+  const jitsiContainerRef = useRef<HTMLDivElement>(null);
+  const [jitsi, setJitsi] = useState<JitsiMeetInstance | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.JitsiMeetExternalAPI) {
+      const script = document.createElement("script");
+      script.src = "https://meet.jit.si/external_api.js";
+      script.async = true;
+      script.onload = () => initializeJitsi();
+      document.body.appendChild(script);
+    } else {
+      initializeJitsi();
+    }
+
+    return () => {
+      jitsi?.dispose();
+    };
+  }, [roomId]);
+
+  const initializeJitsi = () => {
+    if (window.JitsiMeetExternalAPI && jitsiContainerRef.current) {
+      const api = new window.JitsiMeetExternalAPI("meet.jit.si", {
+        roomName: roomId,
+        width: "100%",
+        height: "500px",
+        parentNode: jitsiContainerRef.current,
+        userInfo: { displayName: "Candidate" },
+      });
+      setJitsi(api);
+    } else {
+      console.error("Jitsi API not available");
+    }
+  };
+
+  return (
+    <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-semibold text-white">Live Video Interview</h2>
+      <div ref={jitsiContainerRef} className="mt-4 border border-gray-600 rounded-lg shadow-lg"></div>
     </div>
   );
 }
