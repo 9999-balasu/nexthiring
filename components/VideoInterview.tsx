@@ -128,35 +128,39 @@ export default function VideoInterview({ roomId }: VideoInterviewProps) {
   const [jitsi, setJitsi] = useState<JitsiMeetInstance | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !window.JitsiMeetExternalAPI) {
-      const script = document.createElement("script");
-      script.src = "https://meet.jit.si/external_api.js";
-      script.async = true;
-      script.onload = () => initializeJitsi();
-      document.body.appendChild(script);
-    } else {
-      initializeJitsi();
-    }
+    const loadJitsiScript = () => {
+      if (!window.JitsiMeetExternalAPI) {
+        const script = document.createElement("script");
+        script.src = "https://meet.jit.si/external_api.js";
+        script.async = true;
+        script.onload = () => initializeJitsi();
+        document.body.appendChild(script);
+      } else {
+        initializeJitsi();
+      }
+    };
+
+    const initializeJitsi = () => {
+      if (window.JitsiMeetExternalAPI && jitsiContainerRef.current) {
+        const api = new window.JitsiMeetExternalAPI("meet.jit.si", {
+          roomName: roomId,
+          width: "100%",
+          height: "500px",
+          parentNode: jitsiContainerRef.current,
+          userInfo: { displayName: "Candidate" },
+        });
+        setJitsi(api);
+      } else {
+        console.error("Jitsi API not available");
+      }
+    };
+
+    loadJitsiScript();
 
     return () => {
       jitsi?.dispose();
     };
   }, [roomId]);
-
-  const initializeJitsi = () => {
-    if (window.JitsiMeetExternalAPI && jitsiContainerRef.current) {
-      const api = new window.JitsiMeetExternalAPI("meet.jit.si", {
-        roomName: roomId,
-        width: "100%",
-        height: "500px",
-        parentNode: jitsiContainerRef.current,
-        userInfo: { displayName: "Candidate" },
-      });
-      setJitsi(api);
-    } else {
-      console.error("Jitsi API not available");
-    }
-  };
 
   return (
     <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
