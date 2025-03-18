@@ -36,7 +36,7 @@ export default function RootLayout({
 
 
 
-"use client";
+/*"use client";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
@@ -61,4 +61,69 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
     </html>
   );
+}*/
+
+
+
+/*
+"use client";
+import { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  return (
+    <html lang="en">
+      <body>
+       
+        <main className="container mx-auto p-4">{children}</main>
+      </body>
+    </html>
+  );
 }
+*/
+
+
+"use client";
+import { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeSection, setActiveSection] = useState("home"); // Default section
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
+
+  return (
+    <html lang="en">
+      <body>
+        {/* ✅ Pass authentication state & active section handler */}
+        <Navbar
+          isAuthenticated={isAuthenticated}
+          onLogout={handleLogout}
+          onNavigate={setActiveSection}
+        />
+        <main className="container mx-auto p-4">{children}</main>
+      </body>
+    </html>
+  );
+}
+
