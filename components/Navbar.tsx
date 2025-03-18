@@ -151,7 +151,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
 */
 
 
-"use client";
+/*"use client";
 import { useRouter } from "next/navigation";
 
 interface NavbarProps {
@@ -173,6 +173,42 @@ export default function Navbar({ isAuthenticated, onLogout, onNavigate }: Navbar
           <>
             <button onClick={() => router.push("/register")}>Register</button>
             <button onClick={() => router.push("/login")}>Login</button>
+          </>
+        ) : (
+          <button onClick={onLogout}>Logout</button>
+        )}
+      </div>
+    </nav>
+  );
+}
+*/
+
+
+"use client";
+import { useRouter } from "next/navigation";
+
+interface NavbarProps {
+  isAuthenticated: boolean;
+  onLogout: () => void;
+  onNavigate: (section: string) => void;
+}
+
+export default function Navbar({ isAuthenticated, onLogout, onNavigate }: NavbarProps) {
+  const router = useRouter();
+
+  return (
+    <nav className="bg-gray-900 text-white p-4 flex justify-between">
+      <h1 className="text-lg font-semibold cursor-pointer" onClick={() => onNavigate("home")}>
+        Hiring Platform
+      </h1>
+      <div className="flex gap-4">
+        <button onClick={() => onNavigate("jobs")}>Home</button>
+        
+        {!isAuthenticated ? (
+          <>
+            <button onClick={() => router.push("/register")}>Register</button>
+            <button onClick={() => router.push("/login")}>Login</button>
+            
           </>
         ) : (
           <button onClick={onLogout}>Logout</button>

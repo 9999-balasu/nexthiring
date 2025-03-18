@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 */
 
 
-"use client";
+/*"use client";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
@@ -115,7 +115,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        {/* ✅ Pass authentication state & active section handler */}
+        {/* ✅ Pass authentication state & active section handler */
+        /*<Navbar
+          isAuthenticated={isAuthenticated}
+          onLogout={handleLogout}
+          onNavigate={setActiveSection}
+        />
+        <main className="container mx-auto p-4">{children}</main>
+      </body>
+    </html>
+  );
+}*/
+
+"use client";
+import React, { useEffect, useState, ReactNode } from "react";
+import Navbar from "@/components/Navbar";
+import "./globals.css";
+
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
+
+  return (
+    <html lang="en">
+      <body>
         <Navbar
           isAuthenticated={isAuthenticated}
           onLogout={handleLogout}
@@ -126,4 +163,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
