@@ -306,7 +306,7 @@ import CandidateProfileForm from "@/components/CandidateProfileForm";
 import VideoInterview from "@/components/VideoInterview";
 import PaymentButton from "@/components/PaymentButton";
 import { Job } from "@/types/job";
-
+import Image from "next/image";
 
 export default function Home({ activeSection }: { activeSection: string }) {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -331,11 +331,13 @@ export default function Home({ activeSection }: { activeSection: string }) {
         <section className="flex flex-col items-center">
  
           
-          <img
-            src="https://up.yimg.com/ib/th?id=OIP.2K_ksL6cPI4N4JPws9wQkgHaEo&pid=Api&rs=1&c=1&qlt=95&w=167&h=104" // ✅ Change to your image path
-            alt="Hiring Platform"
-            className="w-full max-w-4xl rounded-lg shadow-lg"
-          />
+ <Image
+  src="https://up.yimg.com/ib/th?id=OIP.2K_ksL6cPI4N4JPws9wQkgHaEo&pid=Api&rs=1&c=1&qlt=95&w=167&h=104"
+  alt="Hiring Platform"
+  width={167}
+  height={104}
+  className="w-full max-w-4xl rounded-lg shadow-lg"
+/>
           <h1 className="text-3xl font-bold mt-4">Welcome to Hiring Platform</h1>
           <p className="text-lg text-gray-700 mt-2">Find jobs, upload resumes, and more!</p>
         </section>

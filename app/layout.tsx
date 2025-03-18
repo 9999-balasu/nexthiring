@@ -158,7 +158,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           onLogout={handleLogout}
           onNavigate={setActiveSection}
         />
-        <main className="container mx-auto p-4">{children}</main>
+     
+
+
+
+        <main className="container mx-auto p-4">{children}
+
+        </main>
       </body>
     </html>
   );
